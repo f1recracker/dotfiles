@@ -13,6 +13,12 @@ packages:
     brew: { cask: font-mononoki-nerd-font }
   iterm2:
     brew: { cask: iterm2 }
+  bazelisk:
+    pacman: bazelisk
+    brew: bazelisk
+  rustup:
+    pacman: rustup
+    brew: rustup
   vscode:
     pacman: code
     brew: { cask: visual-studio-code }
