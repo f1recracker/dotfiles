@@ -1,0 +1,39 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "darwin" -}}
+set -eufo pipefail
+
+# packages hash: {{ .packages | toJson | sha256sum }}
+
+if ! command -v brew >/dev/null; then
+  echo "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+{{ $formulae := list -}}
+{{ $casks := list -}}
+{{ range $name, $mgrs := .packages -}}
+  {{ if hasKey $mgrs "brew" -}}
+    {{ $b := $mgrs.brew -}}
+    {{ if kindIs "map" $b -}}
+      {{ if hasKey $b "cask" -}}
+        {{ $casks = append $casks $b.cask -}}
+      {{ end -}}
+    {{ else -}}
+      {{ $formulae = append $formulae $b -}}
+    {{ end -}}
+  {{ end -}}
+{{ end -}}
+
+FORMULAE=({{ $formulae | join " " }})
+CASKS=({{ $casks | join " " }})
+
+echo "Installing formulae..."
+for pkg in "${FORMULAE[@]}"; do
+  brew list "$pkg" &>/dev/null || brew install "$pkg"
+done
+
+echo "Installing casks..."
+for cask in "${CASKS[@]}"; do
+  brew list --cask "$cask" &>/dev/null || brew install --cask "$cask"
+done
+{{ end -}}

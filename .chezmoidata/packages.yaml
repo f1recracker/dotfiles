@@ -1,0 +1,12 @@
+packages:
+  starship:
+    pacman: starship
+    brew: starship
+  opencode:
+    pacman: opencode
+    brew: opencode
+  iterm2:
+    brew: { cask: iterm2 }
+  vscode:
+    pacman: code
+    brew: { cask: visual-studio-code }

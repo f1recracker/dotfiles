@@ -1,0 +1,18 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "linux" -}}
+set -eufo pipefail
+
+# packages hash: {{ .packages | toJson | sha256sum }}
+
+{{ $pkgs := list -}}
+{{ range $name, $mgrs := .packages -}}
+  {{ if hasKey $mgrs "pacman" -}}
+    {{ $pkgs = append $pkgs $mgrs.pacman -}}
+  {{ end -}}
+{{ end -}}
+
+PACMAN_PACKAGES=({{ $pkgs | join " " }})
+
+echo "Syncing pacman..."
+sudo pacman -Syu --needed --noconfirm "${PACMAN_PACKAGES[@]}"
+{{ end -}}

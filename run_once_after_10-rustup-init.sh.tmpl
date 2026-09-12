@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eufo pipefail
+
+if command -v rustup >/dev/null 2>&1; then
+  if ! rustup show >/dev/null 2>&1; then
+    echo "Initializing rustup toolchain..."
+    rustup default stable
+  fi
+fi
