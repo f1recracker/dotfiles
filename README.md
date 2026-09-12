@@ -42,3 +42,7 @@ sudo -v && chezmoi apply -v
 ```zsh
 echo '[ -f ~/.zshrc.local ] && source ~/.zshrc.local' >> ~/.zshrc
 ```
+
+#### Setup fonts
+
+Install a nerd font manually in terminal emulator for starship.

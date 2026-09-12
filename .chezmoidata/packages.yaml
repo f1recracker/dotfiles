@@ -5,6 +5,12 @@ packages:
   opencode:
     pacman: opencode
     brew: opencode
+  nerd-font-martian-mono:
+    pacman: ttf-martian-mono-nerd
+    brew: { cask: font-martian-mono-nerd-font }
+  nerd-font-mononoki:
+    pacman: ttf-mononoki-nerd
+    brew: { cask: font-mononoki-nerd-font }
   iterm2:
     brew: { cask: iterm2 }
   vscode:
