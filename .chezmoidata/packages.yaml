@@ -22,3 +22,6 @@ packages:
   vscode:
     pacman: code
     brew: { cask: visual-studio-code }
+  google-chrome:
+    aur: google-chrome
+    brew: { cask: google-chrome }
