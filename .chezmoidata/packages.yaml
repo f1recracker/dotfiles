@@ -8,6 +8,9 @@ packages:
   nerd-font-martian-mono:
     pacman: ttf-martian-mono-nerd
     brew: { cask: font-martian-mono-nerd-font }
+  nerd-font-0xproto:
+    pacman: ttf-0xproto-nerd
+    brew: { cask: font-0xproto-nerd-font }
   nerd-font-mononoki:
     pacman: ttf-mononoki-nerd
     brew: { cask: font-mononoki-nerd-font }
