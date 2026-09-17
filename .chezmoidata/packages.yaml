@@ -1,4 +1,7 @@
 packages:
+  chezmoi:
+    pacman: chezmoi
+    brew: chezmoi
   starship:
     pacman: starship
     brew: starship

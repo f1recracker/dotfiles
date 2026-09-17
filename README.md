@@ -2,6 +2,52 @@
 
 Managed with [chezmoi](https://www.chezmoi.io/).
 
+Supports macOS (`brew`) and Arch Linux (`pacman` + `paru` for AUR).
+
+## Setup
+
+### Fresh install
+
+#### macOS
+
+```sh
+tmpdir=$(mktemp -d)
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$tmpdir"
+"$tmpdir/chezmoi" init --apply git@github.com:f1recracker/dotfiles.git
+rm -rf "$tmpdir"
+```
+
+#### Arch Linux
+
+```sh
+sudo pacman -S chezmoi
+chezmoi init --apply git@github.com:f1recracker/dotfiles.git
+```
+
+#### Post setup
+
+1. Setup `.zshrc`:
+  ```sh
+  grep -q 'zshrc.local' ~/.zshrc || echo '[ -f ~/.zshrc.local ] && source ~/.zshrc.local' >> ~/.zshrc
+  ```
+
+2. Setup installed [Nerd fonts](https://www.nerdfonts.com/font-downloads) in terminal for starship.
+
+### Existing installation
+
+```sh
+chezmoi apply -v
+```
+
+```sh
+# alternatively if you need sudo
+sudo -v && chezmoi apply -v
+```
+
+## Configuration
+
+### Packages
+
 To add a package, add an entry to `.chezmoidata/packages.yaml`:
 
 ```yaml
@@ -12,7 +58,7 @@ packages:
   ...
 ```
 
-Omit `brew` / `pacman` to skip that manager. For a mac-only cask:
+Omit `brew` / `pacman` / `aur` to skip that manager. For a mac-only cask:
 
 ```yaml
 packages:
@@ -20,29 +66,3 @@ packages:
     brew: { cask: iterm2 }
   ...
 ```
-
-## Usage
-
-### Current status
-```zsh
-chezmoi diff
-chezmoi status
-```
-
-### Apply configurations
-
-```zsh
-sudo -v && chezmoi apply -v
-```
-
-### Post apply
-
-#### Update `.zshrc`
-
-```zsh
-echo '[ -f ~/.zshrc.local ] && source ~/.zshrc.local' >> ~/.zshrc
-```
-
-#### Setup fonts
-
-Install a nerd font manually in terminal emulator for starship.
