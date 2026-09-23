@@ -7,3 +7,6 @@ packages:
     brew: { cask: font-martian-mono-nerd-font }
   iterm2:
     brew: { cask: iterm2 }
+  google-chrome:
+    aur: google-chrome
+    brew: { cask: google-chrome }
