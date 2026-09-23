@@ -1,0 +1,14 @@
+{{- $gitName := index . "gitName" | default "" -}}
+{{- $gitEmail := index . "gitEmail" | default "" -}}
+{{- if or $gitName $gitEmail -}}
+[user]
+{{- if $gitName }}
+	name = {{ $gitName | quote }}
+{{- end }}
+{{- if $gitEmail }}
+	email = {{ $gitEmail | quote }}
+{{- end }}
+
+{{ end -}}
+[core]
+	hooksPath = {{ .chezmoi.homeDir }}/.config/git/hooks

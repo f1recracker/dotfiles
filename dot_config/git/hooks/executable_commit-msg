@@ -1,0 +1,22 @@
+#!/bin/sh
+# commit-msg hook: enforce Conventional Commits
+# (https://www.conventionalcommits.org/).
+# Allows merge/revert/fixup subjects and ignores comment lines.
+# Bypass with: git commit --no-verify
+
+subject=$(grep -v '^#' "$1" | head -n 1)
+
+case "$subject" in
+  Merge\ *|Revert\ *|fixup!\ *|squash!\ *) exit 0 ;;
+esac
+
+pattern='^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\([^)]*\))?!?: [^ ]'
+
+if printf '%s\n' "$subject" | grep -Eq "$pattern"; then
+  exit 0
+fi
+
+echo "commit-msg: subject is not a Conventional Commit: $subject" >&2
+echo 'expected "<type>[scope][!]: description", e.g. "feat(git): add commit-msg hook"' >&2
+echo "types: feat fix docs style refactor perf test chore ci build revert" >&2
+exit 1

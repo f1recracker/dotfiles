@@ -45,6 +45,8 @@ Some additional manual steps are needed to finish installation:
 ## Configurations
 
 - Packages can be configured at [.chezmoidata/packages.yaml](.chezmoidata/packages.yaml).
+- Git user configs are prompted during `chezmoi init`. Leaving it empty skips setting git identity.
+- A `commit-msg` git hook is added to enforce [Conventional Commits](https://www.conventionalcommits.org/).
 
 ## Existing setup
 
