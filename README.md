@@ -53,6 +53,7 @@ Some additional manual steps are needed to finish installation:
   - MartianMono Nerd Font with ligatures enabled.
   - Molokai color scheme.
   - Shortcut: `Cmd+T` opens a new tab in the current profile.
+- [MacOS] An empty `~/.hushlogin` is added to silence the login message.
 
 ## Existing setup
 
