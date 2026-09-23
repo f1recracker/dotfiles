@@ -1,0 +1,68 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "darwin" -}}
+set -euo pipefail
+
+# packages hash: {{ .packages | toJson | sha256sum }}
+
+# Probe both default Homebrew prefixes (Apple Silicon + Intel).
+ensure_brew_shellenv() {
+  for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    if [ -x "$_brew" ]; then
+      eval "$("$_brew" shellenv)"
+      return 0
+    fi
+  done
+  return 1
+}
+
+if ! command -v brew >/dev/null 2>&1; then
+  # Brew may be installed but missing from PATH (fresh install, non-login shell).
+  if ! ensure_brew_shellenv; then
+    echo "Installing Homebrew..."
+    # Unattended installation: https://docs.brew.sh/Installation#unattended-installation
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ensure_brew_shellenv
+    if ! grep -Fq "brew shellenv" "$HOME/.zprofile" 2>/dev/null; then
+      echo "Adding brew shellenv to ~/.zprofile..."
+      cat >> "$HOME/.zprofile" <<'EOF'
+for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+  if [ -x "$_brew" ]; then eval "$("$_brew" shellenv)"; break; fi
+done
+unset _brew
+EOF
+    fi
+  fi
+fi
+
+{{ $formulae := list -}}
+{{ $casks := list -}}
+{{ range $name, $mgrs := .packages -}}
+  {{ if hasKey $mgrs "brew" -}}
+    {{ $b := $mgrs.brew -}}
+    {{ if kindIs "map" $b -}}
+      {{ if hasKey $b "cask" -}}
+        {{ $casks = append $casks $b.cask -}}
+      {{ end -}}
+    {{ else -}}
+      {{ $formulae = append $formulae $b -}}
+    {{ end -}}
+  {{ end -}}
+{{ end -}}
+
+FORMULAE=({{ $formulae | join " " }})
+CASKS=({{ $casks | join " " }})
+
+if [ "${#FORMULAE[@]}" -gt 0 ]; then
+  echo "Installing formulae..."
+  for pkg in "${FORMULAE[@]}"; do
+    brew list "$pkg" >/dev/null 2>&1 || brew install "$pkg"
+  done
+fi
+
+if [ "${#CASKS[@]}" -gt 0 ]; then
+  echo "Installing casks..."
+  for cask in "${CASKS[@]}"; do
+    brew list --cask "$cask" >/dev/null 2>&1 || brew install --cask "$cask"
+  done
+fi
+{{ end -}}

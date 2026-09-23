@@ -1,0 +1,51 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "linux" -}}
+set -euo pipefail
+
+# packages hash: {{ .packages | toJson | sha256sum }}
+
+{{ $pkgs := list -}}
+{{ range $name, $mgrs := .packages -}}
+  {{ if hasKey $mgrs "aur" -}}
+    {{ $pkgs = append $pkgs $mgrs.aur -}}
+  {{ end -}}
+{{ end -}}
+
+AUR_PACKAGES=({{ $pkgs | join " " }})
+
+if [ "${#AUR_PACKAGES[@]}" -eq 0 ]; then
+  echo "No AUR packages to install."
+  exit 0
+fi
+
+# Only Arch and derivatives (Manjaro, EndeavourOS, ...) use paru/AUR.
+# The chezmoi condition above matches any Linux, so guard the distro here.
+if [ -r /etc/os-release ]; then
+  # shellcheck disable=SC1091
+  . /etc/os-release
+fi
+case "${ID:-unknown} ${ID_LIKE:-}" in
+  *arch*|*manjaro*)
+    ;;
+  *)
+    echo "Skipping AUR setup: unsupported distro (ID=${ID:-unknown})." >&2
+    exit 0
+    ;;
+esac
+if ! command -v pacman >/dev/null 2>&1; then
+  echo "Skipping AUR setup: pacman not found." >&2
+  exit 0
+fi
+
+if ! command -v paru >/dev/null 2>&1; then
+  echo "Installing paru..."
+  # paru is AUR-only (not in official repos), so build it from AUR directly.
+  sudo pacman -S --needed --noconfirm git base-devel
+  tmpdir=$(mktemp -d)
+  trap 'rm -rf "$tmpdir"' EXIT
+  git clone https://aur.archlinux.org/paru.git "$tmpdir/paru"
+  (cd "$tmpdir/paru" && makepkg -si --noconfirm)
+fi
+
+paru -S --needed --noconfirm "${AUR_PACKAGES[@]}"
+{{ end -}}

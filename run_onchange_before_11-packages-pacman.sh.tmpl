@@ -1,0 +1,42 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "linux" -}}
+set -euo pipefail
+
+# packages hash: {{ .packages | toJson | sha256sum }}
+
+# Only Arch and derivatives (Manjaro, EndeavourOS, ...) use pacman.
+# The chezmoi condition above matches any Linux, so guard the distro here.
+if [ -r /etc/os-release ]; then
+  # shellcheck disable=SC1091
+  . /etc/os-release
+fi
+case "${ID:-unknown} ${ID_LIKE:-}" in
+  *arch*|*manjaro*)
+    ;;
+  *)
+    echo "Skipping pacman setup: unsupported distro (ID=${ID:-unknown})." >&2
+    exit 0
+    ;;
+esac
+if ! command -v pacman >/dev/null 2>&1; then
+  echo "Skipping pacman setup: pacman not found." >&2
+  exit 0
+fi
+
+{{ $pkgs := list -}}
+{{ range $name, $mgrs := .packages -}}
+  {{ if hasKey $mgrs "pacman" -}}
+    {{ $pkgs = append $pkgs $mgrs.pacman -}}
+  {{ end -}}
+{{ end -}}
+
+PACMAN_PACKAGES=({{ $pkgs | join " " }})
+
+if [ "${#PACMAN_PACKAGES[@]}" -eq 0 ]; then
+  echo "No pacman packages to install."
+  exit 0
+fi
+
+echo "Syncing pacman..."
+sudo pacman -Syu --needed --noconfirm "${PACMAN_PACKAGES[@]}"
+{{ end -}}
