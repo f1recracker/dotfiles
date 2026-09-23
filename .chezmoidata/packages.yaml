@@ -16,3 +16,6 @@ packages:
   opencode:
     pacman: opencode
     brew: opencode
+  bazelisk:
+    pacman: bazelisk
+    brew: bazelisk
