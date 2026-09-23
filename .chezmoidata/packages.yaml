@@ -13,3 +13,6 @@ packages:
   vscode:
     pacman: code
     brew: { cask: visual-studio-code }
+  opencode:
+    pacman: opencode
+    brew: opencode
