@@ -40,13 +40,19 @@ Some additional manual steps are needed to finish installation:
   grep -q 'zshrc.local' ~/.zshrc || echo '[ -f ~/.zshrc.local ] && source ~/.zshrc.local' >> ~/.zshrc
   ```
 
-2. Setup installed [Nerd fonts](https://www.nerdfonts.com/font-downloads) in terminal for starship.
+2. Setup installed [Nerd fonts](https://www.nerdfonts.com/font-downloads) in terminal for starship. **This is configured automatically for MacOS/iterm2 (MartianMono Nerd Font; see below).**
 
 ## Configurations
 
 - Packages can be configured at [.chezmoidata/packages.yaml](.chezmoidata/packages.yaml).
 - Git user configs are prompted during `chezmoi init`. Leaving it empty skips setting git identity.
 - A `commit-msg` git hook is added to enforce [Conventional Commits](https://www.conventionalcommits.org/).
+- [MacOS] iterm2 has been explicitly configured with:
+  - Hotkey window (triggered by `` ` ``) with its own profile (alongside the existing default profile).
+  - Natural text editing.
+  - MartianMono Nerd Font with ligatures enabled.
+  - Molokai color scheme.
+  - Shortcut: `Cmd+T` opens a new tab in the current profile.
 
 ## Existing setup
 

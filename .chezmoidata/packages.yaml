@@ -5,3 +5,5 @@ packages:
   nerd-font-martian-mono:
     pacman: ttf-martian-mono-nerd
     brew: { cask: font-martian-mono-nerd-font }
+  iterm2:
+    brew: { cask: iterm2 }

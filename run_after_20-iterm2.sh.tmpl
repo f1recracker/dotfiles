@@ -1,0 +1,53 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "darwin" -}}
+set -euo pipefail
+
+# iTerm2 settings live in the repo as a sanitized XML plist
+# (iterm2/com.googlecode.iterm2.plist) which has iterm defaults plus
+# some additional overrides. Machine specific state (window frames,
+# sync data, updater state) is stripped from the file.
+#
+# Configurations applied:
+# - Hotkey window using ` and a new "Hotkey Window" profile
+# - For both "Hotkey Window" and "Default" profiles:
+#   - Setup Martian Mono nerd font
+#   - Enable ligatures
+#   - Use Molokai color theme
+#   - Enable natural text editing
+#   - Add shortcut: `cmd+t` opens a new tab in the _current_ profile.
+
+: "${CHEZMOI_SOURCE_DIR:?CHEZMOI_SOURCE_DIR is not set}"
+
+PLIST="$HOME/Library/Preferences/com.googlecode.iterm2.plist"
+WANT="$CHEZMOI_SOURCE_DIR/iterm2/com.googlecode.iterm2.plist"
+
+# iTerm2 overwrites the plist on quit, so it must not be running.
+# Prompt infinitely; Ctrl-C (or EOF) skips.
+while pgrep -x iTerm2 >/dev/null 2>&1; do
+  echo "iTerm2 is running. Preferences can't be applied while it runs."
+  if [ ! -t 0 ]; then
+    echo "Quit iTerm2 and re-run chezmoi apply to configure it."
+    exit 0
+  fi
+  printf '%s' "Quit iTerm2 (Cmd+Q), then press ENTER to retry (Ctrl-C to skip): "
+  read -r _ || exit 0
+done
+
+if [ ! -f "$PLIST" ]; then
+  echo "Seeding iTerm2 preferences (launch iTerm2 to pick them up)..."
+  cp "$WANT" "$PLIST"
+  exit 0
+fi
+
+if cmp -s "$WANT" "$PLIST"; then
+  echo "iTerm2 settings already in sync."
+  exit 0
+fi
+
+BACKUP="$PLIST.backup-before-chezmoi-$(date +%Y%m%d-%H%M%S)"
+echo "Applying iTerm2 settings (previous saved to $BACKUP)..."
+cp "$PLIST" "$BACKUP"
+cp "$WANT" "$PLIST"
+# Drop the prefs daemon cache so it picks up the replaced file.
+killall cfprefsd 2>/dev/null || true
+{{ end -}}
