@@ -10,3 +10,6 @@ packages:
   google-chrome:
     aur: google-chrome
     brew: { cask: google-chrome }
+  vscode:
+    pacman: code
+    brew: { cask: visual-studio-code }
