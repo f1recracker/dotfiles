@@ -22,7 +22,7 @@ if ! command -v brew >/dev/null 2>&1; then
     # Unattended installation: https://docs.brew.sh/Installation#unattended-installation
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     ensure_brew_shellenv
-    if ! grep -Fq "brew shellenv" "$HOME/.zprofile" 2>/dev/null; then
+    if ! grep -Fq '_brew' "$HOME/.zprofile" 2>/dev/null; then
       echo "Adding brew shellenv to ~/.zprofile..."
       cat >> "$HOME/.zprofile" <<'EOF'
 for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
