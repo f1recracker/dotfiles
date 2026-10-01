@@ -2,3 +2,7 @@
 {{ if lookPath "starship" -}}
 eval "$(starship init zsh)"
 {{ end -}}
+
+{{ if lookPath "atuin" -}}
+eval "$(atuin init zsh)"
+{{ end -}}

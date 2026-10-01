@@ -19,3 +19,6 @@ packages:
   bazelisk:
     pacman: bazelisk
     brew: bazelisk
+  atuin:
+    pacman: atuin
+    brew: atuin
