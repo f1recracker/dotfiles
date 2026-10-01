@@ -2,3 +2,16 @@
 {{ if lookPath "starship" -}}
 eval "$(starship init zsh)"
 {{ end -}}
+
+# zsh-autosuggestions (Homebrew on macOS, system path on Arch)
+if command -v brew >/dev/null 2>&1; then
+  _autosuggest_file="$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  [ -s "$_autosuggest_file" ] && source "$_autosuggest_file"
+  unset _autosuggest_file
+fi
+[ -s /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+[ -s /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+{{ if lookPath "atuin" -}}
+eval "$(atuin init zsh)"
+{{ end -}}

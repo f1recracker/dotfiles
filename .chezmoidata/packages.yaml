@@ -19,3 +19,9 @@ packages:
   bazelisk:
     pacman: bazelisk
     brew: bazelisk
+  zsh-autosuggestions:
+    pacman: zsh-autosuggestions
+    brew: zsh-autosuggestions
+  atuin:
+    pacman: atuin
+    brew: atuin
