@@ -2,6 +2,15 @@
 {{ if eq .chezmoi.os "darwin" -}}
 set -euo pipefail
 
+# Interactive opt-out on every apply; non-interactive keeps default (yes).
+if [ -t 0 ]; then
+  printf '%s' "Configure iTerm2 preferences? [Y/n]: "
+  read -r _configure_iterm || _configure_iterm=""
+  case "$_configure_iterm" in
+    [nN]*) echo "Skipping iTerm2 configuration."; exit 0 ;;
+  esac
+fi
+
 # iTerm2 settings live in the repo as a sanitized XML plist
 # (iterm2/com.googlecode.iterm2.plist) which has iterm defaults plus
 # some additional overrides. Machine specific state (window frames,
