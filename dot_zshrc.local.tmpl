@@ -10,3 +10,14 @@ eval "$(starship init zsh)"
 {{ if lookPath "atuin" -}}
 eval "$(atuin init zsh)"
 {{ end -}}
+
+# Default to colored output (only when output is a TTY via `auto`/`-G`).
+export CLICOLOR=1
+
+if ls --color=auto /dev/null >/dev/null 2>&1; then
+  alias ls='ls --color=auto'
+else
+  alias ls='ls -G'
+fi
+
+alias diff='diff --color=auto'
