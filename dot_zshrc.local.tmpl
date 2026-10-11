@@ -1,5 +1,8 @@
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
+# Treat / as a word boundary
+WORDCHARS=${WORDCHARS//\/}
+
 {{ if lookPath "starship" -}}
 eval "$(starship init zsh)"
 {{ end -}}

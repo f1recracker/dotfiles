@@ -1,0 +1,23 @@
+# Ghostty config — managed by chezmoi (dot_config/ghostty/config).
+
+# appearence
+font-family = "MartianMono NFM"
+font-size = 12
+
+theme = Molokai
+
+# quick-terminal
+quick-terminal-position = top
+quick-terminal-size = 100%
+quick-terminal-autohide = true
+# keybind: quick-terminal
+keybind = global:backquote=toggle_quick_terminal
+
+## keybinds: general
+macos-option-as-alt = left
+keybind = super+t=new_tab
+
+# keybinds: natural text editing
+keybind = alt+backspace=text:\x1b\x7f
+keybind = delete=text:\x04
+keybind = alt+delete=esc:d

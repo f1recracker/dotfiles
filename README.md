@@ -31,19 +31,19 @@ Some additional manual steps are needed to finish installation:
   grep -q 'zshrc.local' ~/.zshrc || echo '[ -f ~/.zshrc.local ] && source ~/.zshrc.local' >> ~/.zshrc
   ```
 
-2. Setup installed [Nerd fonts](https://www.nerdfonts.com/font-downloads) in terminal for starship. **This is configured automatically for MacOS/iterm2 (MartianMono Nerd Font; see below).**
+2. Setup installed [Nerd fonts](https://www.nerdfonts.com/font-downloads) in terminal for starship. **This is configured automatically for Ghostty (MartianMono Nerd Font; see below).**
 
 ## Configurations
 
 - Packages can be configured at [.chezmoidata/packages.yaml](.chezmoidata/packages.yaml).
 - Git user configs are prompted during `chezmoi init`. Leaving it empty skips setting git identity.
 - A `commit-msg` git hook is added to enforce [Conventional Commits](https://www.conventionalcommits.org/).
-- [MacOS] iterm2 has been explicitly configured with:
-  - Hotkey window (triggered by `` ` ``) with its own profile (alongside the existing default profile).
+- Ghostty ([config](dot_config/ghostty/config)) has been explicitly configured with:
+  - Quick/dropdown terminal (triggered globally by `` ` ``, top of screen, autohide).
   - Natural text editing.
   - MartianMono Nerd Font with ligatures enabled.
   - Molokai color scheme.
-  - Shortcut: `Cmd+T` opens a new tab in the current profile.
+  - Shortcut: `Cmd+T` opens a new tab.
 - [MacOS] An empty `~/.hushlogin` is added to silence the login message.
 
 ## Existing setup
@@ -72,7 +72,8 @@ packages:
   starship:
     pacman: starship
     brew: starship
-  iterm2:
-    brew: { cask: iterm2 }
+  ghostty:
+    pacman: ghostty
+    brew: { cask: ghostty }
   ...
 ```
