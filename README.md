@@ -70,7 +70,11 @@ sudo -v && chezmoi apply -v
 
 ### Packages
 
-To add a package, add an entry to [.chezmoidata/packages.yaml](.chezmoidata/packages.yaml). Omitting a package manager `pacman` / `aur` / `brew` skips installation (for `brew`, use `{ cask: <name> }` for casks).
+Most packages are managed in [.chezmoidata/packages.yaml](.chezmoidata/packages.yaml) with a few exceptions (see [exceptions below](#exceptions)). Omitting a package manager `pacman` / `aur` / `brew` skips installation (for `brew`, use `{ cask: <name> }` for casks).
+
+#### Exceptions
+
+- **Rustup**: Rustup is installed via the official `sh.rustup.rs` script (See `run_before_13-rustup.sh`).
 
 ```yaml
 packages:
