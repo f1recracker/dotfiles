@@ -8,27 +8,18 @@ Supports the following platforms:
 
 ## New setup
 
-### MacOS
+One command on macOS or Arch Linux:
 
 ```sh
-tmpdir=$(mktemp -d)
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$tmpdir"
-export PATH="$tmpdir:$PATH" # use downloaded chezmoi in this shell only
+sh -c "$(curl -fsLS https://raw.githubusercontent.com/f1recracker/dotfiles/master/install.sh)"
 ```
 
-If homebrew is missing, pre-authenticate sudo to complete setup (see https://docs.brew.sh/Installation#unattended-installation)
+It installs chezmoi if missing (may ask for sudo), clones this repo to `~/repos/dotfiles`, applies it, and pins that dir as chezmoi's source so later `chezmoi apply` / `chezmoi update` runs keep working.
+
+If Homebrew is missing on macOS, pre-authenticate sudo first (see https://docs.brew.sh/Installation#unattended-installation):
 
 ```sh
 sudo -v
-chezmoi init --apply https://github.com/f1recracker/dotfiles.git
-rm -rf "$tmpdir"
-```
-
-### Arch Linux
-
-```sh
-sudo pacman -S chezmoi
-chezmoi init --apply https://github.com/f1recracker/dotfiles.git
 ```
 
 ### Post setup
