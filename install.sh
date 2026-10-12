@@ -16,6 +16,21 @@ mkdir -p "$SOURCE_DIR"
 
 case "$(uname -s)" in
   Darwin)
+    # Xcode Command Line Tools provide git (needed by `chezmoi init` to clone)
+    # and are required by Homebrew later during `chezmoi apply`.
+    if ! xcode-select -p >/dev/null 2>&1; then
+      msg "Installing Xcode Command Line Tools..."
+      xcode-select --install || true
+      msg "Waiting for Xcode Command Line Tools to finish installing (timeout 15m)..."
+      i=0
+      while ! xcode-select -p >/dev/null 2>&1; do
+        i=$((i + 1))
+        if [ "$i" -ge 180 ]; then
+          die "timed out waiting for Xcode Command Line Tools (run 'xcode-select --install' manually)"
+        fi
+        sleep 5
+      done
+    fi
     # Temporarily fetch chezmoi and use it in this shell only.
     tmpdir="$(mktemp -d)"
     trap 'rm -rf "$tmpdir"' EXIT
