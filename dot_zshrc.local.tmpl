@@ -3,13 +3,9 @@
 # Treat / as a word boundary
 WORDCHARS=${WORDCHARS//\/}
 
-{{ if lookPath "starship" -}}
-eval "$(starship init zsh)"
-{{ end -}}
+command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
-{{ if lookPath "atuin" -}}
-eval "$(atuin init zsh)"
-{{ end -}}
+command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh)"
 
 # Default to colored output (only when output is a TTY via `auto`/`-G`).
 export CLICOLOR=1
