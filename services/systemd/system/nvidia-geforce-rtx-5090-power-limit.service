@@ -1,0 +1,12 @@
+[Unit]
+Description=Set NVIDIA GeForce RTX 5090 power limit to 450W
+ConditionPathExists=/usr/bin/nvidia-smi
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/nvidia-smi --persistence-mode=1
+ExecStart=/usr/bin/nvidia-smi --power-limit=450
+
+[Install]
+WantedBy=multi-user.target

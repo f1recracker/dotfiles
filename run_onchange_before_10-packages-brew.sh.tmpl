@@ -34,10 +34,28 @@ EOF
   fi
 fi
 
+{{ $root := . -}}
 {{ $formulae := list -}}
 {{ $casks := list -}}
-{{ range $name, $mgrs := .packages -}}
-  {{ if hasKey $mgrs "brew" -}}
+{{ range $name, $mgrs := $root.packages -}}
+  {{ $include := true -}}
+  {{ if hasKey $mgrs "if" -}}
+    {{ $cur := $root -}}
+    {{ $found := true -}}
+    {{ range splitList "." $mgrs.if -}}
+      {{ if $found -}}
+        {{ if and (kindIs "map" $cur) (hasKey $cur .) -}}
+          {{ $cur = index $cur . -}}
+        {{ else -}}
+          {{ $found = false -}}
+        {{ end -}}
+      {{ end -}}
+    {{ end -}}
+    {{ if or (not $found) (not $cur) -}}
+      {{ $include = false -}}
+    {{ end -}}
+  {{ end -}}
+  {{ if and $include (hasKey $mgrs "brew") -}}
     {{ $b := $mgrs.brew -}}
     {{ if kindIs "map" $b -}}
       {{ if hasKey $b "cask" -}}

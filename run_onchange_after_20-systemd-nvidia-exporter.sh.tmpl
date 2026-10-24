@@ -1,0 +1,16 @@
+#!/bin/bash
+{{- $gpu := dig "gpu" "model" "" . }}
+{{ if eq .chezmoi.os "linux" -}}
+{{ if and (hasPrefix "nvidia_" $gpu) (dig "gpu" "nvidia_management_services" false .) -}}
+set -euo pipefail
+
+echo "GPU {{ $gpu }}: enabling telemetry (nvidia-gpu-exporter.service)"
+sudo systemctl daemon-reload
+if systemctl cat nvidia-gpu-exporter.service >/dev/null 2>&1; then
+  # nvidia-gpu-exporter.service is installed via packages.yaml on same conditional
+  sudo systemctl enable --now nvidia-gpu-exporter.service
+else
+  echo "warning: nvidia-gpu-exporter.service not found, skipping." >&2
+fi
+{{ end -}}
+{{ end -}}

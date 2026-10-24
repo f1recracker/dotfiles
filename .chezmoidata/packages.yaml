@@ -26,3 +26,6 @@ packages:
   atuin:
     pacman: atuin
     brew: atuin
+  nvidia-gpu-exporter:
+    aur: nvidia-gpu-exporter-bin
+    if: gpu.nvidia_management_services

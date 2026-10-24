@@ -1,9 +1,11 @@
-
-# Override chezmoi's default source dir (~/.local/share/chezmoi).
 sourceDir = {{ printf "%s/repos/dotfiles" .chezmoi.homeDir | quote }}
 
-{{ $gitName := promptString "git user.name" (index . "gitName" | default "") -}}
-{{- $gitEmail := promptString "git user.email" (index . "gitEmail" | default "") -}}
-[data]
-    gitName = {{ $gitName | quote }}
-    gitEmail = {{ $gitEmail | quote }}
+[data.git]
+    name = {{ promptString "git user.name" (dig "git" "name" "" .) | quote }}
+    email = {{ promptString "git user.email" (dig "git" "email" "" .) | quote }}
+{{ if lookPath "nvidia-smi" -}}
+{{ $gpu := output "nvidia-smi" "--query-gpu=name" "--format=csv,noheader" | trim | splitList "\n" | first | lower | replace " " "_" -}}
+[data.gpu]
+    model = {{ $gpu | quote }}
+    nvidia_management_services = {{ promptBoolOnce . "gpu.nvidia_management_services" (printf "Set up Nvidia GPU management services? (GPU detected %s)" $gpu) true }}
+{{ end -}}

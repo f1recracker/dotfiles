@@ -1,5 +1,5 @@
-{{- $gitName := index . "gitName" | default "" -}}
-{{- $gitEmail := index . "gitEmail" | default "" -}}
+{{- $gitName := dig "git" "name" "" . -}}
+{{- $gitEmail := dig "git" "email" "" . -}}
 {{- if or $gitName $gitEmail -}}
 [user]
 {{- if $gitName }}

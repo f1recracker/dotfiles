@@ -37,6 +37,9 @@ Some additional manual steps are needed to finish installation:
 
 - Packages can be configured at [.chezmoidata/packages.yaml](.chezmoidata/packages.yaml).
 - Git user configs are prompted during `chezmoi init`. Leaving it empty skips setting git identity.
+- On Linux with the NVIDIA driver installed, `chezmoi init` detects the GPU and allows setting up additional GPU management services:
+  - `nvidia-gpu-exporter.service` exports Prometheus metrics for Nvidia GPUs.
+  - `nvidia-geforce-rtx-5090-power-limit.service` sets a 450W power limit on the RTX 5090.
 - A `commit-msg` git hook is added to enforce [Conventional Commits](https://www.conventionalcommits.org/).
 - Ghostty ([config](dot_config/ghostty/config)) has been explicitly configured with:
   - Quick/dropdown terminal (triggered globally by `` ` ``, top of screen, autohide).
@@ -61,7 +64,7 @@ sudo -v && chezmoi apply -v
 
 ### Packages
 
-Most packages are managed in [.chezmoidata/packages.yaml](.chezmoidata/packages.yaml) with a few exceptions (see [exceptions below](#exceptions)). Omitting a package manager `pacman` / `aur` / `brew` skips installation (for `brew`, use `{ cask: <name> }` for casks).
+Most packages are managed in [.chezmoidata/packages.yaml](.chezmoidata/packages.yaml) with a few exceptions (see [exceptions below](#exceptions)). Omitting a package manager `pacman` / `aur` / `brew` skips installation (for `brew`, use `{ cask: <name> }` for casks). A package can be gated on chezmoi data with an optional `if: <dotted data path>` (e.g. `if: gpu.nvidia_management_services`); when the path is missing or falsy the package is skipped by all managers.
 
 #### Exceptions
 
